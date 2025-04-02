@@ -1,9 +1,28 @@
+resource "null_resource" "docker_push" {
+  depends_on = [var.ecr_repo_url]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      ECR_URL=${var.ecr_repo_url}
+
+      # Authenticate with ECR
+      aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_URL
+
+      # Build and push the Docker image
+      docker pull --platform=linux/amd64 nginx
+      docker tag nginx $ECR_URL:latest
+      docker push $ECR_URL:latest
+    EOT
+  }
+}
+
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/ecs/${var.task_definition_family_name}"
   retention_in_days = var.retention_in_days
 }
 
 resource "aws_ecs_task_definition" "ecs_task_definition" {
+ depends_on = [null_resource.docker_push]
  family             = var.task_definition_family_name
  requires_compatibilities = ["EC2"]
  runtime_platform {
@@ -19,7 +38,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
  container_definitions = jsonencode([
    {
      name      = var.container_name
-     image_uri    = "${var.ecr_repo_url}/${var.tag}"
+     image = "${var.ecr_repo_url}:${var.tag}"
      essential = true
      portMappings = [
        {
@@ -57,6 +76,18 @@ resource "aws_ecs_capacity_provider" "capacity_provider" {
     }
   }
 
+}
+
+resource "aws_ecs_cluster_capacity_providers" "example" {
+ cluster_name = aws_ecs_cluster.ecs_cluster.name
+
+ capacity_providers = [aws_ecs_capacity_provider.capacity_provider.name]
+
+ default_capacity_provider_strategy {
+   base              = 1
+   weight            = 100
+   capacity_provider = aws_ecs_capacity_provider.capacity_provider.name
+ }
 }
 
 resource "aws_ecs_service" "ecs_service" {

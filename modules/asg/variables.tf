@@ -49,3 +49,7 @@ variable "ecs_cluster_name" {
 variable "ec2_instance_profile_name" {
     type = string
 }
+
+variable "role" {
+    type = string
+}

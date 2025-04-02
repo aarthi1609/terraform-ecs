@@ -8,12 +8,14 @@ module "network"{
     source = "./modules/network"
     vpc_cidr_block = "10.0.0.0/16"
     availability_zones = ["ap-south-1a", "ap-south-1b"]
-    public_subnets_cidr = ["10.0.1.0/24", "10.0.5.0/24"]
-    private_subnets_cidr = ["10.0.4.0/24", "10.0.5.0/24"]
+    public_subnets_cidr  = ["10.0.1.0/24", "10.0.2.0/24"]
+    private_subnets_cidr = ["10.0.3.0/24", "10.0.4.0/24"]
     project_name = var.project_name 
     environment = var.environment
-    name = "ecs-sg"
-    description = "ECS Security Group"
+    ecs_sg_name = "ecs-sg"
+    alb_sg_name = "alb-sg"
+    alb_sg_description = "ALB Security Group"
+    ecs_sg_description = "ECS Security Group"
     vpc_id = module.network.vpc_id
 }
 
@@ -31,19 +33,20 @@ module "asg"{
     autoscaling_max_size = 2
     autoscaling_min_size = 1
     autoscaling_desired_capacity = 1
-    ami_id = "ami-0e35ddab05955cf57"  
+    ami_id = "ami-0024206fed5c99368"  
     vpc_security_group_ids = module.network.vpc_security_group_ids
     private_subnet_ids = module.network.private_subnet_ids
     ec2_instance_profile_name = module.iam.ec2_instance_profile_name
     ecs_cluster_name = "test-ecs-cluster"
+    role = "test-project"
 }
 
 module "alb" {
     source = "./modules/alb"
     project_name = var.project_name
     environment = var.environment
-    security_groups = module.network.vpc_security_group_ids
-    subnets = module.network.private_subnet_ids
+    security_groups = [module.network.alb_security_group_id]
+    subnets = module.network.public_subnet_ids
     vpc_id = module.network.vpc_id
     healthcheck_endpoint = "/"
     domain_name = "test.com"
@@ -52,14 +55,14 @@ module "alb" {
 
 module "ecs" {
   source = "./modules/ecs"
-  task_definition_family_name = "test-task-family"
+  task_definition_family_name = "test-tdf-family"
   operating_system_family = "LINUX"
-  cpu_architecture = "ARM64"
+  cpu_architecture = "X86_64"
   network_mode = "bridge"
   cpu = "512"
   memory = "512"
   container_name = "test-container"
-  tag = 1
+  tag = "latest"
   container_port = 80
   host_port = 80 
   retention_in_days = 7

@@ -81,3 +81,11 @@ output "target_group_arn" {
 output "ec2_instance_profile_name" { 
   value = module.iam.ec2_instance_profile_name
 }
+
+output "capacity_provider_arn" { 
+  value = module.ecs.capacity_provider_arn
+}
+
+output "alb_security_group_id" {    
+  value = module.network.alb_security_group_id
+}

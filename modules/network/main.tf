@@ -101,13 +101,34 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_security_group" "ecs_sg" {
-      name        = var.name
-      description = var.description
+      name        = var.ecs_sg_name
+      description = var.ecs_sg_description
+      vpc_id      = var.vpc_id
+      egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+}
+
+resource "aws_security_group_rule" "allow_ecs" {
+      type        = "ingress"
+      from_port   = 0
+      to_port     = 65535
+      protocol    = "tcp"
+      security_group_id = aws_security_group.ecs_sg.id  
+  source_security_group_id = aws_security_group.alb_sg.id
+}
+
+resource "aws_security_group" "alb_sg" {
+      name        = var.alb_sg_name
+      description = var.alb_sg_description
       vpc_id      = var.vpc_id
 
       ingress {
-        from_port   = 1
-        to_port     = 65535
+        from_port   = 80
+        to_port     = 80
         protocol    = "tcp"
         cidr_blocks = ["0.0.0.0/0"] 
       }

@@ -22,14 +22,22 @@ variable "private_subnets_cidr" {
     type = list(string)
 }   
 
-variable "name" {   
-    type = string
-}
-
-variable "description" {   
-    type = string
-}
-
 variable "vpc_id" {   
+    type = string
+}
+
+variable "ecs_sg_name" {   
+    type = string
+}
+
+variable "alb_sg_name" {   
+    type = string
+}
+
+variable "ecs_sg_description" {   
+    type = string
+}
+
+variable "alb_sg_description" {   
     type = string
 }

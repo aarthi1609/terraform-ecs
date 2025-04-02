@@ -47,7 +47,7 @@ variable "memory" {
 }
 
 variable "tag" {
-  type = number
+  type = string
 }
 
 variable "operating_system_family" {

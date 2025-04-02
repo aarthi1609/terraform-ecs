@@ -9,6 +9,7 @@ resource "aws_launch_template" "ecs_launch_template" {
   instance_type          = var.instance_type
   user_data              = base64encode(templatefile("${path.module}/user_data.sh", {
     ecs_cluster_name = var.ecs_cluster_name
+    role = var.role
   }))
   
   iam_instance_profile {
@@ -18,7 +19,7 @@ resource "aws_launch_template" "ecs_launch_template" {
 }
 
 resource "aws_autoscaling_group" "ecs_autoscaling_group" {
-  name                  = "${var.project_name}-asg-${var.environment}"
+  name                  = "${var.project_name}-autoscaling-${var.environment}"
   max_size              = var.autoscaling_max_size
   min_size              = var.autoscaling_min_size
   desired_capacity      = var.autoscaling_desired_capacity
