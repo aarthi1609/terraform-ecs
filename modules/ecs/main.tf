@@ -57,7 +57,6 @@ resource "aws_ecs_capacity_provider" "capacity_provider" {
     }
   }
 
-  depends_on = [var.asg_arn]
 }
 
 resource "aws_ecs_service" "ecs_service" {
