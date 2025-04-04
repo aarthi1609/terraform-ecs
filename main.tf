@@ -49,7 +49,8 @@ module "alb" {
     subnets = module.network.public_subnet_ids
     vpc_id = module.network.vpc_id
     healthcheck_endpoint = "/"
-    domain_name = "test.com"
+    certificate_arn = "arn:aws:acm:ap-south-1:767828731847:certificate/03d33a3e-56d3-4afe-a11b-fa9954ae7efe"
+    domain_name = "mako-tf.stagingenv.co"
 }
 
 
