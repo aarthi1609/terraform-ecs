@@ -2,9 +2,7 @@ name: Terraform Security Scan
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: main
 
 jobs:
   security-scan:
@@ -18,17 +16,20 @@ jobs:
     - name: Run tfsec
       uses: aquasecurity/tfsec-action@v1.0.0
       with:
-        soft_fail: true
+        soft_fail: false # pipeline stops on failure
+        minimum_severity: HIGH
+        additional_args: --minimum-severity HIGH --no-ignore-warnings
 
     - name: Run checkov
       uses: bridgecrewio/checkov-action@master
       with:
         directory: .
         framework: terraform
-        soft_fail: true
+        soft_fail: false # pipeline stops on failure
+        check_severity_threshold: HIGH
 
-    - name: Run terraform fmt check
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.0.0
-        run: terraform fmt -check -recursive
+    - name: Initialize Terraform
+      run: terraform init -backend=false
+
+    - name: Check Formatting
+      run: terraform fmt -check -diff -recursive
