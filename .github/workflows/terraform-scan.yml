@@ -20,7 +20,6 @@ jobs:
       env:
         TFSEC_MINIMUM_SEVERITY: HIGH
       with:
-        soft_fail: false # pipeline stops on failure if false
         additional_args: >
           --minimum-severity HIGH
 
