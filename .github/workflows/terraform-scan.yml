@@ -20,7 +20,7 @@ jobs:
       env:
         TFSEC_MINIMUM_SEVERITY: HIGH # pipeline stops on failure 
       with:
-        soft_fail: true 
+        soft_fail: false
 
     - name: Run checkov
       uses: bridgecrewio/checkov-action@master
