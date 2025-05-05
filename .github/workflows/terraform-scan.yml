@@ -3,6 +3,8 @@ name: Terraform Security Scan
 on:
   push:
     branches: main
+  pull_request:
+    branches: main
 
 jobs:
   security-scan:
@@ -18,7 +20,7 @@ jobs:
       with:
         soft_fail: false # pipeline stops on failure
         minimum_severity: HIGH
-        additional_args: --minimum-severity HIGH --no-ignore-warnings
+        additional_args: --minimum-severity HIGH 
 
     - name: Run checkov
       uses: bridgecrewio/checkov-action@master
