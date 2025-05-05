@@ -3,8 +3,6 @@ name: Terraform Security Scan
 on:
   push:
     branches: main
-  pull_request:
-    branches: main
 
 jobs:
   security-scan:
@@ -18,14 +16,16 @@ jobs:
     - name: Run tfsec
       uses: aquasecurity/tfsec-action@v1.0.0
       with:
-        soft_fail: false
+        soft_fail: false # pipeline stops on failure
+        minimum_severity: HIGH
+        additional_args: --minimum-severity HIGH --no-ignore-warnings
 
     - name: Run checkov
       uses: bridgecrewio/checkov-action@master
       with:
         directory: .
         framework: terraform
-        soft_fail: false
+        soft_fail: false # pipeline stops on failure
         check_severity_threshold: HIGH
 
     - name: Initialize Terraform
