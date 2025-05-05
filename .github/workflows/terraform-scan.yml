@@ -40,5 +40,5 @@ jobs:
     - name: Initialize Terraform
       run: terraform init -backend=false
 
-    - name: Check Formatting
-      run: terraform fmt -check -diff -recursive
+    - name: Validate Terraform Configuration
+      run: terraform validate
