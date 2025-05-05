@@ -18,17 +18,23 @@ jobs:
     - name: Run tfsec
       uses: aquasecurity/tfsec-action@v1.0.0
       env:
-        TFSEC_MINIMUM_SEVERITY: HIGH # pipeline stops on failure 
+        TFSEC_MINIMUM_SEVERITY: HIGH 
       with:
-        soft_fail: false
+        # additional_args: >
+        #   --minimum-severity HIGH  #pipeline stops on failure 
 
     - name: Run checkov
       uses: bridgecrewio/checkov-action@master
       with:
         directory: .
         framework: terraform
-        soft_fail: true # pipeline stops on failure if false
+        soft_fail: true #pipeline stops on failure if false
         check_severity_threshold: HIGH
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.0
 
     - name: Initialize Terraform
       run: terraform init -backend=false
