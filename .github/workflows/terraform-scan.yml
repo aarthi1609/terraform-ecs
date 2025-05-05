@@ -19,7 +19,8 @@ jobs:
       uses: aquasecurity/tfsec-action@v1.0.0
       # env:
       #   TFSEC_MINIMUM_SEVERITY: HIGH 
-      # with:
+      with:
+        soft_fail: false
       #   additional_args: >
       #     --minimum-severity HIGH  #pipeline stops on failure 
 
