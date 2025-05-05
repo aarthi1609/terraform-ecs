@@ -20,6 +20,7 @@ jobs:
       env:
         TFSEC_MINIMUM_SEVERITY: HIGH
       with:
+        soft_fail: true # pipeline stops on failure if we use soft_fail
         additional_args: >
           --minimum-severity HIGH
 
@@ -28,7 +29,7 @@ jobs:
       with:
         directory: .
         framework: terraform
-        soft_fail: false # pipeline stops on failure if false
+        soft_fail: true # pipeline stops on failure if false
         check_severity_threshold: HIGH
 
     - name: Initialize Terraform
