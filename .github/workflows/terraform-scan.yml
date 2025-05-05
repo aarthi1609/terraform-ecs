@@ -20,16 +20,16 @@ jobs:
       env:
         TFSEC_MINIMUM_SEVERITY: HIGH
       with:
-        soft_fail: false # pipeline stops on failure
+        soft_fail: false # pipeline stops on failure if false
         additional_args: >
-          --severity-level HIGH
+          --minimum-severity HIGH
 
     - name: Run checkov
       uses: bridgecrewio/checkov-action@master
       with:
         directory: .
         framework: terraform
-        soft_fail: false # pipeline stops on failure
+        soft_fail: false # pipeline stops on failure if false
         check_severity_threshold: HIGH
 
     - name: Initialize Terraform
