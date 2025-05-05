@@ -18,11 +18,9 @@ jobs:
     - name: Run tfsec
       uses: aquasecurity/tfsec-action@v1.0.0
       env:
-        TFSEC_MINIMUM_SEVERITY: HIGH
+        TFSEC_MINIMUM_SEVERITY: HIGH # pipeline stops on failure 
       with:
-        soft_fail: true # pipeline stops on failure if we use soft_fail
-        additional_args: >
-          --minimum-severity HIGH
+        soft_fail: true 
 
     - name: Run checkov
       uses: bridgecrewio/checkov-action@master
