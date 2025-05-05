@@ -17,8 +17,8 @@ jobs:
 
     - name: Run tfsec
       uses: aquasecurity/tfsec-action@v1.0.0
-      env:
-        TFSEC_MINIMUM_SEVERITY: HIGH 
+      # env:
+      #   TFSEC_MINIMUM_SEVERITY: HIGH 
       # with:
       #   additional_args: >
       #     --minimum-severity HIGH  #pipeline stops on failure 
